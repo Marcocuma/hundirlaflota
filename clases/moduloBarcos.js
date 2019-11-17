@@ -22,7 +22,7 @@ export class Board {
             switch (dir) {
                 //goes up
                 case 1:
-                    if ((alt-life)<0) {
+                    if ((alt-life+1)<0) {
                         space=false;
                     }else{
                         for (let j = anch - 1; j <= (anch + 1); j++) {
@@ -36,7 +36,7 @@ export class Board {
                     break;
                 //Goes to the right
                 case 2:
-                    if ((anch+life)>9) {
+                    if ((anch+life-1)>9) {
                         space=false;
                     }else{
                         for (let i = alt - 1; i <= (alt + 1); i++) {
@@ -50,7 +50,7 @@ export class Board {
                     break;
                 //goes down
                 case 3:
-                    if ((alt+life)>9) {
+                    if ((alt+life-1)>9) {
                         space=false;
                     }else{
                         for (let j = anch - 1; j <= (anch + 1); j++) {
@@ -64,7 +64,7 @@ export class Board {
                     break;
                 //goes to the left
                 case 4:
-                    if ((anch-life)<0) {
+                    if ((anch-life+1)<0) {
                         space=false;
                     }else{
                         for (let i = alt - 1; i <= (alt + 1); i++) {
@@ -85,13 +85,13 @@ export class Board {
     fill() {
         //Place ships on the board randomly
         //4 ships-1life; 3ships-2life; 2ships-3lifes; 1ships-4lifes
-        let ships=new Array(4,3,2,1);
-        for(let i=0;i<ships.length;i++) {
-            var contador=ships[i];
+        let ships=new Array(1,2,3,4);
+        for(let i=ships.length;i>0;i--) {
+            var contador=ships[ships.length-i];
             while(contador>0) {
                 let random = Math.round(Math.random() * 10);
                 let random2 = Math.round(Math.random() * 10);
-                let life = i+1;
+                let life = i;
                 let dir = Math.round(Math.random() * (4-1)+1);
                 if (this.checkSpace(random, random2, dir, life) == true) {
                     contador--;
@@ -108,30 +108,29 @@ export class Board {
                     for (let i = alt; i > (alt - life); i--) {
                         this.board[i][anch] = 1;
                     }
+                    return true;
                     break;
                 case 2:
                     for (let i = anch; i < (anch + life); i++) {
                         this.board[alt][i] = 1;
                     }
+                    return true;
                     break;
                 case 3:
                     for (let i = alt; i < (alt + life); i++) {
                         this.board[i][anch] = 1;
                     }
+                    return true;
                     break;
                 case 4:
                     for (let i = anch; i > (anch - life); i--) {
                         this.board[alt][i] = 1;
                     }
-                    break;
-
-                default:
+                    return true;
                     break;
             }
-        } else {
-            console.log("Unexpected Error");
-        }
-
+        }else
+            return false;
     }
     touch(alt, anch) {
         //subtract a life point from the ship and return 1 if it has not failed and 3 if it has failed
@@ -151,5 +150,13 @@ export class Board {
             }
         }
         return 1;
+    }
+    cleanBoard(){
+        //clean the board
+        for (let i = 0; i < this.board.length; i++) {
+            for (let j = 0; j < this.board[0].length; j++) {
+                this.board[i][j] = 0;
+            }
+        }
     }
 }
